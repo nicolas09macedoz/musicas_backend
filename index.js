@@ -1,4 +1,4 @@
-import express from "express"
+import express, { response } from "express"
 import cors from "cors"
 import mysql2 from "mysql2"
 import "dotenv/config"
@@ -31,5 +31,21 @@ app.get("/", (request, response) => {
 app.listen(3001, () => {
     console.log("Servidor Online")
 })
+
+app.post("/cadastrar", (request, response) => {
+    const { titulo, artista, genero, ano, duracao } = request.body;
+    const comandoInsert = "INSERT INTO musicas_nicolas_macedo(titulo, artista, genero, ano, duracao) VALUES (?, ?, ?, ?, ?)"
+
+    sql.query(comandoInsert, [titulo, artista, genero, ano, duracao], (error) => {
+        if (error) {
+            console.error("ERRO NO BANCO:", error);
+            return response.status(500).json({ mensagem: "Erro ao salvar" })
+        }
+
+        
+        return response.status(201).json({ mensagem: "Música cadastrada com sucesso!" })
+    }); 
+    
+});
 
 export default app
